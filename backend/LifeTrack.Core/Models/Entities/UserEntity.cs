@@ -9,4 +9,7 @@ public class UserEntity
     public required string SecurityPin { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    public virtual ICollection<KanbanTaskEntity> KanbanTasks { get; set; } = [];
+    public virtual ICollection<KanbanTaskCategoryEntity> KanbanCategories { get; set; } = [];
 }
