@@ -7,4 +7,12 @@ public class KanbanTaskCategoryEntity
     public DateTime CreatedAt { get; set; }
 
     public virtual ICollection<KanbanTaskEntity> Tasks { get; set; } = [];
+
+    public static KanbanTaskCategoryEntity Create(string name) =>
+        new()
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            CreatedAt = DateTime.UtcNow
+        };
 }
