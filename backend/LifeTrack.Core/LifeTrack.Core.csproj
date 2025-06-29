@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Models\Contracts\Create\" />
       <Folder Include="Models\Contracts\Delete\" />
       <Folder Include="Models\Contracts\Specific\" />
       <Folder Include="Models\Contracts\Update\" />
