@@ -1,6 +1,8 @@
-﻿namespace LifeTrack.Core.Interfaces.Services.Security;
+﻿using LifeTrack.Core.Models.Contracts;
+
+namespace LifeTrack.Core.Interfaces.Services.Security;
 
 public interface IJwtService
 {
-    string GenerateToken(Guid userId);
+    Result<string> GenerateToken(Guid userId);
 }
