@@ -16,7 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\LifeTrack.Core\LifeTrack.Core.csproj" />
-      <ProjectReference Include="..\LifeTrack.Infractructure\LifeTrack.Infractructure.csproj" />
+      <ProjectReference Include="..\LifeTrack.Infrastructure\LifeTrack.Infrastructure.csproj" />
       <ProjectReference Include="..\LifeTrack.Services\LifeTrack.Services.csproj" />
     </ItemGroup>
 

@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\LifeTrack.Core\LifeTrack.Core.csproj" />
-      <ProjectReference Include="..\LifeTrack.Infractructure\LifeTrack.Infractructure.csproj" />
+      <ProjectReference Include="..\LifeTrack.Infrastructure\LifeTrack.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
