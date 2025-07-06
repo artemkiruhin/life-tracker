@@ -23,8 +23,8 @@ public class KanbanTaskService : IKanbanTaskService
         try
         {
             var task = await _database.KanbanTaskRepository.GetByIdAsync(taskId, ct);
-            if (task == null) return Result<KanbanTaskDTO>.Failure("Category not found");
-            if (task.UserId !=  userId) return Result<KanbanTaskDTO>.Failure("User not found");
+            if (task == null) return Result<KanbanTaskDTO>.Failure("Task not found");
+            if (task.UserId !=  userId) return Result<KanbanTaskDTO>.Failure("Access denied");
 
             var dto = new KanbanTaskDTO(
                 Id: task.Id,
@@ -117,8 +117,8 @@ public class KanbanTaskService : IKanbanTaskService
         try
         {
             var taskById = await _database.KanbanTaskRepository.GetByIdAsync(request.Id, ct);
-            if (taskById == null) return Result<KanbanTaskDTO>.Failure("Category not found");
-            if (taskById.UserId != request.UserId) return Result<KanbanTaskDTO>.Failure("User not found");
+            if (taskById == null) return Result<KanbanTaskDTO>.Failure("Task not found");
+            if (taskById.UserId != request.UserId) return Result<KanbanTaskDTO>.Failure("Access denied");
             
             if (!string.IsNullOrEmpty(request.Title)) taskById.Title = request.Title;
             if (!string.IsNullOrEmpty(request.DescriptionMarkdown))
@@ -130,7 +130,7 @@ public class KanbanTaskService : IKanbanTaskService
             
 
             var result = _database.KanbanTaskRepository.Update(taskById);
-            if (result == null) return Result<KanbanTaskDTO>.Failure("Category not found");
+            if (result == null) return Result<KanbanTaskDTO>.Failure("Task not found");
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
             
@@ -163,9 +163,9 @@ public class KanbanTaskService : IKanbanTaskService
         try
         {
             var task = await _database.KanbanTaskRepository.GetByIdAsync(taskId, ct);
-            if (task == null) return Result<KanbanTaskDTO>.Failure("Category not found");
+            if (task == null) return Result<KanbanTaskDTO>.Failure("Task not found");
             
-            if (task.UserId != userId) return Result<KanbanTaskDTO>.Failure("User not found");
+            if (task.UserId != userId) return Result<KanbanTaskDTO>.Failure("Access denied");
             
             var result = _database.KanbanTaskRepository.Delete(task);
             await _database.SaveChangesAsync(ct);
@@ -199,12 +199,12 @@ public class KanbanTaskService : IKanbanTaskService
         try
         {
             var taskById = await _database.KanbanTaskRepository.GetByIdAsync(request.TaskId, ct);
-            if (taskById == null) return Result<KanbanTaskDTO>.Failure("Category not found");
-            if (taskById.UserId != request.UserId) return Result<KanbanTaskDTO>.Failure("User not found");
+            if (taskById == null) return Result<KanbanTaskDTO>.Failure("Task not found");
+            if (taskById.UserId != request.UserId) return Result<KanbanTaskDTO>.Failure("Access denied");
             
             taskById.TaskCategoryId = null;
             var result = _database.KanbanTaskRepository.Update(taskById);
-            if (result == null) return Result<KanbanTaskDTO>.Failure("Category not found");
+            if (result == null) return Result<KanbanTaskDTO>.Failure("Task not found");
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
             
@@ -236,16 +236,16 @@ public class KanbanTaskService : IKanbanTaskService
         try
         {
             var taskById = await _database.KanbanTaskRepository.GetByIdAsync(request.TaskId, ct);
-            if (taskById == null) return Result<KanbanTaskDTO>.Failure("Category not found");
-            if (taskById.UserId != request.UserId) return Result<KanbanTaskDTO>.Failure("User not found");
+            if (taskById == null) return Result<KanbanTaskDTO>.Failure("Task not found");
+            if (taskById.UserId != request.UserId) return Result<KanbanTaskDTO>.Failure("Access denied");
             
             var categoryById = await _database.KanbanCategoryRepository.GetByIdAsync(request.NewCategoryId, ct);
             if (categoryById == null) return Result<KanbanTaskDTO>.Failure("Category not found");
-            if (categoryById.UserId != request.UserId) return Result<KanbanTaskDTO>.Failure("User not found");
+            if (categoryById.UserId != request.UserId) return Result<KanbanTaskDTO>.Failure("Access denied");
             
             taskById.TaskCategoryId = request.NewCategoryId;
             var result = _database.KanbanTaskRepository.Update(taskById);
-            if (result == null) return Result<KanbanTaskDTO>.Failure("Category not found");
+            if (result == null) return Result<KanbanTaskDTO>.Failure("Task not found");
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
             

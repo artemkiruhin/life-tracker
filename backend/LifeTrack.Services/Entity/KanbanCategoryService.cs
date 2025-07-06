@@ -23,7 +23,7 @@ public class KanbanCategoryService :  IKanbanCategoryService
         {
             var category = await _database.KanbanCategoryRepository.GetByIdAsync(categoryId, ct);
             if (category == null) return Result<KanbanCategoryDTO>.Failure("Category not found");
-            if (category.UserId !=  userId) return Result<KanbanCategoryDTO>.Failure("User not found");
+            if (category.UserId !=  userId) return Result<KanbanCategoryDTO>.Failure("Access denied");
             
             var dto = new KanbanCategoryDTO(
                 Id: category.Id,
@@ -92,7 +92,7 @@ public class KanbanCategoryService :  IKanbanCategoryService
             var category = await _database.KanbanCategoryRepository.GetByIdAsync(request.Id, ct);
             if (category == null) return Result<KanbanCategoryDTO>.Failure("Category not found");
 
-            if (category.UserId != request.UserId) return Result<KanbanCategoryDTO>.Failure("User not found");
+            if (category.UserId != request.UserId) return Result<KanbanCategoryDTO>.Failure("Access denied");
             
             if (!string.IsNullOrEmpty(request.Name))
             {
@@ -128,7 +128,7 @@ public class KanbanCategoryService :  IKanbanCategoryService
             var category = await _database.KanbanCategoryRepository.GetByIdAsync(categoryId, ct);
             if (category == null) return Result<KanbanCategoryDTO>.Failure("Category not found");
             
-            if (category.UserId != userId) return Result<KanbanCategoryDTO>.Failure("User not found");
+            if (category.UserId != userId) return Result<KanbanCategoryDTO>.Failure("Access denied");
             
             var result = _database.KanbanCategoryRepository.Delete(category);
             await _database.SaveChangesAsync(ct);
