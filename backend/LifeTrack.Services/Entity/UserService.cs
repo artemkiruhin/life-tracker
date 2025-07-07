@@ -16,12 +16,14 @@ public class UserService : IUserService
     private readonly IUnitOfWork _database;
     private readonly IHashingService _hasher;
     private readonly IUserMapper _mapper;
+    private readonly IUserSecurityService _securityService;
 
-    public UserService(IUnitOfWork database, IHashingService hasher, IUserMapper mapper)
+    public UserService(IUnitOfWork database, IHashingService hasher, IUserMapper mapper, IUserSecurityService  securityService)
     {
         _database = database;
         _hasher = hasher;
         _mapper = mapper;
+        _securityService = securityService;
     }
     
     public async Task<Result<UserDTO>> GetUser(Guid userId, CancellationToken ct)
@@ -51,7 +53,7 @@ public class UserService : IUserService
             if (userByEmail != null) return Result<UserDTO>.Failure("Email already exists");
             
             var passwordHash = _hasher.HashData(request.Password);
-            var generatedSecurityPin = GenerateSecurityPin();
+            var generatedSecurityPin = _securityService.GenerateSecurityPin();
             
             var newUser = UserEntity.Create(request.Username,  passwordHash, request.Email, generatedSecurityPin);
             
@@ -67,20 +69,6 @@ public class UserService : IUserService
             await _database.RollbackTransactionAsync(ct);
             return Result<UserDTO>.Failure(e.Message);
         }
-    }
-
-    private string GenerateSecurityPin()
-    {
-        var random = new Random();
-        var randomPin = new int[4];
-        var numberResult = 0d;
-        for (var i = 0; i < 4; i++)
-        {
-            randomPin[i] = random.Next(0, 10);
-            numberResult += randomPin[i] * (Math.Pow(10, i));
-        }
-
-        return numberResult.ToString();
     }
 
     public async Task<Result<UserDTO>> Update(UserUpdateContract request, CancellationToken ct)
