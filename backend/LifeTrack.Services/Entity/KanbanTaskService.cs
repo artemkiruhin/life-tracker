@@ -1,5 +1,6 @@
 ﻿using LifeTrack.Core.Interfaces;
 using LifeTrack.Core.Interfaces.Services.Entity;
+using LifeTrack.Core.Interfaces.Services.Mappers;
 using LifeTrack.Core.Models.Contracts;
 using LifeTrack.Core.Models.Contracts.Create;
 using LifeTrack.Core.Models.Contracts.Specific;
@@ -12,10 +13,12 @@ namespace LifeTrack.Services.Entity;
 public class KanbanTaskService : IKanbanTaskService
 {
     private readonly IUnitOfWork _database;
+    private readonly IKanbanTaskMapper _mapper;
 
-    public KanbanTaskService(IUnitOfWork database)
+    public KanbanTaskService(IUnitOfWork database, IKanbanTaskMapper mapper)
     {
         _database = database;
+        _mapper = mapper;
     }
     
     public async Task<Result<KanbanTaskDTO>> GetTaskById(Guid taskId, Guid userId, CancellationToken ct)
@@ -26,20 +29,7 @@ public class KanbanTaskService : IKanbanTaskService
             if (task == null) return Result<KanbanTaskDTO>.Failure("Task not found");
             if (task.UserId !=  userId) return Result<KanbanTaskDTO>.Failure("Access denied");
 
-            var dto = new KanbanTaskDTO(
-                Id: task.Id,
-                Title: task.Title,
-                DescriptionMarkdown: task.DescriptionMarkdown,
-                IsImportant: task.IsImportant,
-                IsCompleted: task.IsCompleted,
-                Category: new KanbanCategoryDTO(
-                    Id: task.Category.Id,
-                    Name: task.Category.Name,
-                    CreatedAt: task.Category.CreatedAt
-                ),
-                CreatedAt: task.CreatedAt,
-                UpdatedAt: task.UpdatedAt
-            );
+            var dto = _mapper.Map(task);
             return Result<KanbanTaskDTO>.Success(dto);
         }
         catch (Exception e)
@@ -55,20 +45,7 @@ public class KanbanTaskService : IKanbanTaskService
             var tasks = await _database.KanbanTaskRepository
                 .FindRangeAsync(x => x.UserId == userId, ct);
 
-            var dtos = tasks.Select(task => new KanbanTaskDTO(
-                Id: task.Id,
-                Title: task.Title,
-                DescriptionMarkdown: task.DescriptionMarkdown,
-                IsImportant: task.IsImportant,
-                IsCompleted: task.IsCompleted,
-                Category: new KanbanCategoryDTO(
-                    Id: task.Category.Id,
-                    Name: task.Category.Name,
-                    CreatedAt: task.Category.CreatedAt
-                ),
-                CreatedAt: task.CreatedAt,
-                UpdatedAt: task.UpdatedAt
-            )).ToList();
+            var dtos = tasks.Select(_mapper.Map).ToList();
             return Result<List<KanbanTaskDTO>>.Success(dtos);
         }
         catch (Exception e)
@@ -88,20 +65,7 @@ public class KanbanTaskService : IKanbanTaskService
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
             
-            var dto = new KanbanTaskDTO(
-                Id: result.Id,
-                Title: result.Title,
-                DescriptionMarkdown: result.DescriptionMarkdown,
-                IsImportant: result.IsImportant,
-                IsCompleted: result.IsCompleted,
-                Category: new KanbanCategoryDTO(
-                    Id: result.Category.Id,
-                    Name: result.Category.Name,
-                    CreatedAt: result.Category.CreatedAt
-                ),
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+            var dto = _mapper.Map(result);
             return Result<KanbanTaskDTO>.Success(dto);
         }
         catch (Exception e)
@@ -133,21 +97,8 @@ public class KanbanTaskService : IKanbanTaskService
             if (result == null) return Result<KanbanTaskDTO>.Failure("Task not found");
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
-            
-            var dto = new KanbanTaskDTO(
-                Id: result.Id,
-                Title: result.Title,
-                DescriptionMarkdown: result.DescriptionMarkdown,
-                IsImportant: result.IsImportant,
-                IsCompleted: result.IsCompleted,
-                Category: new KanbanCategoryDTO(
-                    Id: result.Category.Id,
-                    Name: result.Category.Name,
-                    CreatedAt: result.Category.CreatedAt
-                ),
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+
+            var dto = _mapper.Map(result);
             return Result<KanbanTaskDTO>.Success(dto);
         }
         catch (Exception e)
@@ -170,21 +121,8 @@ public class KanbanTaskService : IKanbanTaskService
             var result = _database.KanbanTaskRepository.Delete(task);
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
-            
-            var dto = new KanbanTaskDTO(
-                Id: result.Id,
-                Title: result.Title,
-                DescriptionMarkdown: result.DescriptionMarkdown,
-                IsImportant: result.IsImportant,
-                IsCompleted: result.IsCompleted,
-                Category: new KanbanCategoryDTO(
-                    Id: result.Category.Id,
-                    Name: result.Category.Name,
-                    CreatedAt: result.Category.CreatedAt
-                ),
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+
+            var dto = _mapper.Map(result);
             return Result<KanbanTaskDTO>.Success(dto);
         }
         catch (Exception e)
@@ -207,21 +145,8 @@ public class KanbanTaskService : IKanbanTaskService
             if (result == null) return Result<KanbanTaskDTO>.Failure("Task not found");
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
-            
-            var dto = new KanbanTaskDTO(
-                Id: result.Id,
-                Title: result.Title,
-                DescriptionMarkdown: result.DescriptionMarkdown,
-                IsImportant: result.IsImportant,
-                IsCompleted: result.IsCompleted,
-                Category: new KanbanCategoryDTO(
-                    Id: result.Category.Id,
-                    Name: result.Category.Name,
-                    CreatedAt: result.Category.CreatedAt
-                ),
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+
+            var dto = _mapper.Map(result);
             return Result<KanbanTaskDTO>.Success(dto);
         }
         catch (Exception e)
@@ -249,20 +174,7 @@ public class KanbanTaskService : IKanbanTaskService
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
             
-            var dto = new KanbanTaskDTO(
-                Id: result.Id,
-                Title: result.Title,
-                DescriptionMarkdown: result.DescriptionMarkdown,
-                IsImportant: result.IsImportant,
-                IsCompleted: result.IsCompleted,
-                Category: new KanbanCategoryDTO(
-                    Id: result.Category.Id,
-                    Name: result.Category.Name,
-                    CreatedAt: result.Category.CreatedAt
-                ),
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+            var dto = _mapper.Map(result);
             return Result<KanbanTaskDTO>.Success(dto);
         }
         catch (Exception e)

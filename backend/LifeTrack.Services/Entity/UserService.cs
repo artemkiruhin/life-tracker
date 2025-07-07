@@ -1,5 +1,6 @@
 using LifeTrack.Core.Interfaces;
 using LifeTrack.Core.Interfaces.Services.Entity;
+using LifeTrack.Core.Interfaces.Services.Mappers;
 using LifeTrack.Core.Interfaces.Services.Security;
 using LifeTrack.Core.Models.Contracts;
 using LifeTrack.Core.Models.Contracts.Create;
@@ -14,11 +15,13 @@ public class UserService : IUserService
 {
     private readonly IUnitOfWork _database;
     private readonly IHashingService _hasher;
+    private readonly IUserMapper _mapper;
 
-    public UserService(IUnitOfWork database, IHashingService hasher)
+    public UserService(IUnitOfWork database, IHashingService hasher, IUserMapper mapper)
     {
         _database = database;
         _hasher = hasher;
+        _mapper = mapper;
     }
     
     public async Task<Result<UserDTO>> GetUser(Guid userId, CancellationToken ct)
@@ -27,13 +30,7 @@ public class UserService : IUserService
         {
             var user = await _database.UserRepository.GetByIdAsync(userId, ct);
             if (user == null) return Result<UserDTO>.Failure("User not found");
-            var dto = new UserDTO(
-                Id: user.Id,
-                Username: user.Username,
-                Email: user.Email,
-                CreatedAt: user.CreatedAt,
-                UpdatedAt: user.UpdatedAt
-            );
+            var dto = _mapper.Map(user);
             return Result<UserDTO>.Success(dto);
         }
         catch (Exception e)
@@ -62,13 +59,7 @@ public class UserService : IUserService
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
 
-            var dto = new UserDTO(
-                Id: result.Id,
-                Username: result.Username,
-                Email: result.Email,
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+            var dto = _mapper.Map(result);
             return Result<UserDTO>.Success(dto);
         }
         catch (Exception e)
@@ -115,13 +106,7 @@ public class UserService : IUserService
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
             
-            var dto = new UserDTO(
-                Id: result.Id,
-                Username: result.Username,
-                Email: result.Email,
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+            var dto = _mapper.Map(result);
             return Result<UserDTO>.Success(dto);
         }
         catch (Exception e)
@@ -140,13 +125,7 @@ public class UserService : IUserService
             if (user == null) return Result<UserDTO>.Failure("User not found");
             
             var result = _database.UserRepository.Delete(user);
-            var dto = new UserDTO(
-                Id: result.Id,
-                Username: result.Username,
-                Email: result.Email,
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+            var dto = _mapper.Map(result);
             return Result<UserDTO>.Success(dto);
         }
         catch (Exception e)
@@ -175,13 +154,7 @@ public class UserService : IUserService
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
 
-            var dto = new UserDTO(
-                Id: result.Id,
-                Username: result.Username,
-                Email: result.Email,
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+            var dto = _mapper.Map(result);
             return Result<UserDTO>.Success(dto);
         }
         catch (Exception e)
@@ -212,13 +185,7 @@ public class UserService : IUserService
             await _database.SaveChangesAsync(ct);
             await _database.CommitTransactionAsync(ct);
 
-            var dto = new UserDTO(
-                Id: result.Id,
-                Username: result.Username,
-                Email: result.Email,
-                CreatedAt: result.CreatedAt,
-                UpdatedAt: result.UpdatedAt
-            );
+            var dto = _mapper.Map(result);
             return Result<UserDTO>.Success(dto);
         }
         catch (Exception e)
