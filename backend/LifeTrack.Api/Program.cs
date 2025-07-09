@@ -1,5 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
-
+var configuration =  builder.Configuration;
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
