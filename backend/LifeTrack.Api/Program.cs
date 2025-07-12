@@ -53,6 +53,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseRouting();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
