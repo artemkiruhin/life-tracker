@@ -82,6 +82,16 @@ builder.Services.AddAuthentication(opt =>
             }
         };
     });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000");
+        builder.AllowAnyHeader();
+        builder.AllowAnyMethod();
+        builder.AllowCredentials();
+    });
+});
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
