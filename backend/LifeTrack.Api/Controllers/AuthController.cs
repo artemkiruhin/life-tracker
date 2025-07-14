@@ -1,8 +1,8 @@
 using LifeTrack.Core.Interfaces.Services.Security;
-using LifeTrack.Core.Models.Contracts.Auth;
+using LifeTrack.Core.Models.Contracts.API.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using LoginRequest = LifeTrack.Core.Models.Contracts.Auth.LoginRequest;
+using LoginRequest = LifeTrack.Core.Models.Contracts.API.Auth.LoginRequest;
 
 namespace LifeTrack.Api.Controllers
 {
